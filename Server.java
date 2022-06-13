@@ -47,15 +47,19 @@ public class Server {
             ObjectInputStream input = new ObjectInputStream (socket.getInputStream());
 
             // protocolo simples (HELLO WORLD // HELLO WORLD)
+            System.out.println("Tratando...");
             String msg = input.readUTF();
             System.out.println("Mensagem recebida: " + msg);
             output.writeUTF("HELLO WORLD");
+            output.flush(); // dizer que terminou a msg
 
             input.close();
             output.close();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            // mensagem bonitinha do erro
+            System.out.println("Problema no tratamento da conexão com o cliente: " + socket.getInetAddress());
+            System.out.println("Erro: " + e.getMessage());
             // erro naquela comunicação em específico
         }
         finally { 
@@ -66,8 +70,7 @@ public class Server {
         }
     }
 
-     public static void main(String[] args) {
-        try {
+     public static void main(String[] args) throws IOException, ClassNotFoundException {
             Server server = new Server();
             System.out.println("Aguardando conexão...");
 
@@ -80,8 +83,4 @@ public class Server {
             server.catchConnection(socket);
             System.out.println("Cliente finalizado!");
         }
-        catch (IOException e) {
-            
-        }
-    }
 }
